@@ -1335,8 +1335,8 @@ def generate_markdown_report(cpu, ram, gpus, tools, ollama_models, categories,
                               catalog, total_vram):
     """Generate a full Markdown report with charts and details."""
     now = datetime.now()
-    ts = now.strftime("%d:%m:%Y_%H:%M")
-    ts_display = now.strftime("%d-%m-%Y %H:%M")
+    ts = now.strftime("%d-%m-%Y_%H:%M:%S")
+    ts_display = now.strftime("%d-%m-%Y_%H:%M:%S")
     hostname = platform.node() or "unknown"
 
     # Score all categories
