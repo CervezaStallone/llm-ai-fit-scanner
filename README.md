@@ -2,7 +2,7 @@
 
 **Scan your hardware and find out which AI models you can run locally.**
 
-LLM & AI Fit Scanner auto-detects your CPU, RAM, GPU and VRAM, then scores 12 AI model
+LLM & AI Fit Scanner auto-detects your CPU, RAM, GPU and VRAM, then scores 17 AI model
 categories and hundreds of individual models to tell you exactly what fits
 on your machine — and how to run it.
 
@@ -13,9 +13,11 @@ on your machine — and how to run it.
 ## Features
 
 - **Auto-detection** of CPU, RAM, swap, GPU (NVIDIA via `nvidia-smi`) and VRAM
-- **12 scoring categories**: Small LLMs (1-3B) through XXL (65-72B), embedding,
-  STT, TTS, image generation, vision/multimodal, and code models
-- **Individual model scoring** with 350+ models from a built-in + online catalog
+- **17 scoring categories**: Small LLMs (1-3B) through XXL (65-72B), embedding,
+  STT, TTS, image generation (small & large), vision/multimodal, code models,
+  video generation, object detection, image segmentation, audio/music generation,
+  and document AI/OCR
+- **Individual model scoring** with 650+ models from a built-in + online catalog
 - **Online catalog updates** from HuggingFace and Ollama registries (`--update`)
 - **Installed tool detection** (Ollama, llama.cpp, KoboldCpp, vLLM, Whisper,
   PyTorch, Transformers, etc.)
@@ -92,14 +94,16 @@ python llm_scanner.py --update --lang fr
   Mode: GPU (full)
 
   Medium LLMs (7-8B)
-  ██████████████████████████████ 100/100  ★★★★★  Excellent
-  Mode: GPU (full)
+  ██████████████████████████░░░░  87/100  ★★★★★  Excellent
+  Mode: GPU+CPU offload (82% VRAM)
 
   Large LLMs (13-14B)
   ███████████████████░░░░░░░░░░░  65/100  ★★★    Fair (slower)
   Mode: GPU+CPU offload (51% VRAM)
 
-  ...
+  XXL LLMs (65-72B)
+  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   0/100  ⛔     Not possible
+  Mode: Not feasible
 ```
 
 Reports are saved as Markdown files in `reports/` with Mermaid charts:
@@ -107,9 +111,9 @@ Reports are saved as Markdown files in `reports/` with Mermaid charts:
 ```mermaid
 xychart-beta
     title "Category scores"
-    x-axis ["1-3B", "7-8B", "Embed", "STT", "TTS", "ImgGen-S", "Code", "Vision", "30-34B", "13-14B", "ImgGen-L", "65-72B"]
+    x-axis ["1-3B", "Embed", "STT", "TTS", "ImgGen-S", "ObjDet", "Segment", "AudioGen", "DocAI", "7-8B", "Vision", "Code", "30-34B", "VideoGen", "13-14B", "ImgGen-L", "65-72B"]
     y-axis "Score (0-100)"
-    bar [100, 100, 100, 100, 100, 100, 100, 87, 75, 65, 65, 50]
+    bar [100, 100, 100, 100, 100, 100, 100, 100, 100, 87, 87, 87, 75, 68, 65, 65, 0]
 ```
 
 ## Scoring
@@ -134,7 +138,8 @@ Scoring considers:
 
 LLM & AI Fit Scanner ships with a built-in catalog of common models. Run `--update` to
 fetch the latest from:
-- **HuggingFace** — GGUF models from the Hub
+- **HuggingFace** — trending GGUF, vision, STT, TTS, embedding, code, image gen,
+  video gen, object detection, segmentation, audio gen, and document AI models
 - **Ollama** — models from the Ollama library
 
 The catalog is cached locally in `models_catalog.json`.

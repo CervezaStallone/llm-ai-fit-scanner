@@ -111,14 +111,22 @@ _S = {
                       "Tips voor jouw systeem ({ram}GB RAM, {vram}MB VRAM):",
                       "Tipps für dein System ({ram}GB RAM, {vram}MB VRAM):",
                       "Conseils pour votre système ({ram}GB RAM, {vram}MB VRAM) :"),
-    "tip_vram_1":    ("With {vram}MB VRAM you can run 7-8B models in Q4 quantization",
+    "tip_vram_full_1": ("With {vram}MB VRAM you can run 7-8B models in Q4 quantization",
                       "Met {vram}MB VRAM kun je 7-8B modellen in Q4 kwantisatie",
                       "Mit {vram}MB VRAM kannst du 7-8B Modelle in Q4-Quantisierung",
                       "Avec {vram}MB VRAM vous pouvez exécuter des modèles 7-8B en Q4"),
-    "tip_vram_2":    ("fully on the GPU. Use --n-gpu-layers for offloading.",
+    "tip_vram_full_2": ("fully on the GPU. Use --n-gpu-layers for offloading.",
                       "volledig op de GPU draaien. Gebruik --n-gpu-layers voor offload.",
                       "vollständig auf der GPU ausführen. Nutze --n-gpu-layers für Offloading.",
                       "entièrement sur le GPU. Utilisez --n-gpu-layers pour le déchargement."),
+    "tip_vram_part_1": ("With {vram}MB VRAM you can run 7-8B models in Q4 with",
+                      "Met {vram}MB VRAM kun je 7-8B modellen in Q4 draaien met",
+                      "Mit {vram}MB VRAM kannst du 7-8B Modelle in Q4 ausführen mit",
+                      "Avec {vram}MB VRAM vous pouvez exécuter des modèles 7-8B en Q4 avec"),
+    "tip_vram_part_2": ("GPU+CPU offloading. Use --n-gpu-layers to configure.",
+                      "GPU+CPU offload. Gebruik --n-gpu-layers om te configureren.",
+                      "GPU+CPU-Offloading. Nutze --n-gpu-layers zur Konfiguration.",
+                      "déchargement GPU+CPU. Utilisez --n-gpu-layers pour configurer."),
     "tip_ram_1":     ("With {ram}GB RAM you can run 30B+ models CPU-only",
                       "Met {ram}GB RAM kun je 30B+ modellen CPU-only draaien",
                       "Mit {ram}GB RAM kannst du 30B+ Modelle CPU-only ausführen",
@@ -366,10 +374,14 @@ _S = {
     "md_not":        ("Not / barely feasible", "Niet / nauwelijks haalbaar",
                       "Nicht / kaum machbar", "Non / à peine réalisable"),
     "md_recs":       ("Recommendations", "Aanbevelingen", "Empfehlungen", "Recommandations"),
-    "md_vram_tip":   ("With **{vram} MB VRAM** you can run **7-8B models in Q4** fully on GPU",
+    "md_vram_full":  ("With **{vram} MB VRAM** you can run **7-8B models in Q4** fully on GPU",
                       "Met **{vram} MB VRAM** kun je **7-8B modellen in Q4** volledig op de GPU draaien",
                       "Mit **{vram} MB VRAM** kannst du **7-8B Modelle in Q4** vollständig auf der GPU ausführen",
                       "Avec **{vram} MB VRAM** vous pouvez exécuter des **modèles 7-8B en Q4** sur le GPU"),
+    "md_vram_part":  ("With **{vram} MB VRAM** you can run **7-8B models in Q4** with GPU+CPU offloading",
+                      "Met **{vram} MB VRAM** kun je **7-8B modellen in Q4** draaien met GPU+CPU offload",
+                      "Mit **{vram} MB VRAM** kannst du **7-8B Modelle in Q4** mit GPU+CPU-Offloading ausführen",
+                      "Avec **{vram} MB VRAM** vous pouvez exécuter des **modèles 7-8B en Q4** avec déchargement GPU+CPU"),
     "md_offload_tip":("Use `--n-gpu-layers` to offload layers to GPU for larger models",
                       "Gebruik `--n-gpu-layers` om lagen naar GPU te offloaden voor grotere modellen",
                       "Nutze `--n-gpu-layers` um Schichten auf die GPU auszulagern",
@@ -878,7 +890,7 @@ def get_categories():
         {
             "categorie": T("cat_medium"),
             "beschrijving": T("cat_medium_d"),
-            "vram_min_mb": 4000,
+            "vram_min_mb": 5000,
             "ram_min_gb": 8,
             "ram_cpu_only_gb": 8,
             "voorbeelden": [
@@ -1006,7 +1018,7 @@ def get_categories():
         {
             "categorie": T("cat_code"),
             "beschrijving": T("cat_code_d"),
-            "vram_min_mb": 4000,
+            "vram_min_mb": 5000,
             "ram_min_gb": 8,
             "ram_cpu_only_gb": 8,
             "voorbeelden": [
@@ -1129,7 +1141,7 @@ def compute_score(cat, gpu_vram_mb, ram_total_gb, ram_avail_gb, cpu_threads):
             mode = T("gpu_full")
         else:
             mode = T("gpu_offload", pct=f"{vram_ratio*100:.0f}")
-    elif ram_total_gb >= ram_cpu_only * 0.5:
+    elif ram_total_gb >= ram_cpu_only * 0.75:
         ram_ratio = min(ram_total_gb / ram_cpu_only, 1.0)
         cpu_ratio = min(cpu_threads / 8, 1.0)
         score = int(ram_ratio * 55 + cpu_ratio * 15)
@@ -1585,8 +1597,11 @@ def generate_markdown_report(cpu, ram, gpus, tools, ollama_models, categories,
     # ── Tips
     w(f"## 💡 {T('md_recs')}")
     w(f"")
-    if total_vram >= 3000 and total_vram < 8000:
-        w(f"- {T('md_vram_tip', vram=total_vram)}")
+    if total_vram >= 5000 and total_vram < 8000:
+        w(f"- {T('md_vram_full', vram=total_vram)}")
+        w(f"- {T('md_offload_tip')}")
+    elif total_vram >= 3000 and total_vram < 5000:
+        w(f"- {T('md_vram_part', vram=total_vram)}")
         w(f"- {T('md_offload_tip')}")
     ram_gb_str = f"{ram['total_gb']:.0f}"
     if ram["total_gb"] >= 24:
@@ -1672,12 +1687,14 @@ def _mermaid_cat_labels(cat_results):
             lower = name.lower()
             if "embed" in lower:
                 name = "Embed"
-            elif "stt" in lower or "speech" in lower or "spraak-naar" in lower or "sprache" in lower:
-                name = "STT"
-            elif "tts" in lower or "text-to-s" in lower or "tekst-naar" in lower or "text-zu" in lower:
+            elif "(tts)" in lower or "tekst-naar-s" in lower:
                 name = "TTS"
+            elif "(stt)" in lower or "spraak-naar-t" in lower:
+                name = "STT"
             elif "video" in lower:
                 name = "VideoGen"
+            elif "segment" in lower:
+                name = "Segment"
             elif "image" in lower or "bild" in lower:
                 if "klein" in lower or "small" in lower or "petit" in lower:
                     name = "ImgGen-S"
@@ -1685,8 +1702,6 @@ def _mermaid_cat_labels(cat_results):
                     name = "ImgGen-L"
             elif "object" in lower or "objekt" in lower or "objet" in lower or "detect" in lower:
                 name = "ObjDet"
-            elif "segment" in lower:
-                name = "Segment"
             elif "audio" in lower or "music" in lower or "muziek" in lower or "musik" in lower or "musique" in lower:
                 name = "AudioGen"
             elif "document" in lower or "ocr" in lower or "dokument" in lower:
@@ -1747,9 +1762,13 @@ def print_summary(results, ram, total_vram, tools, catalog):
     ram_str = f"{ram['total_gb']:.0f}"
     print(f"  {BOLD}{T('tips_for', ram=ram_str, vram=str(total_vram))}{RESET}\n")
 
-    if total_vram >= 3000 and total_vram < 8000:
-        print(f"  • {T('tip_vram_1', vram=total_vram)}")
-        print(f"    {T('tip_vram_2')}")
+    if total_vram >= 5000 and total_vram < 8000:
+        print(f"  • {T('tip_vram_full_1', vram=total_vram)}")
+        print(f"    {T('tip_vram_full_2')}")
+        print()
+    elif total_vram >= 3000 and total_vram < 5000:
+        print(f"  • {T('tip_vram_part_1', vram=total_vram)}")
+        print(f"    {T('tip_vram_part_2')}")
         print()
     if ram["total_gb"] >= 24:
         print(f"  • {T('tip_ram_1', ram=ram_str)}")

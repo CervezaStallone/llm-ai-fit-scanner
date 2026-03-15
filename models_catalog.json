@@ -1,5 +1,5 @@
 {
-  "updated": "2026-03-15 21:05:30",
+  "updated": "2026-03-15 21:45:44",
   "models": [
     {
       "id": "bartowski/gemma-2-2b-it-GGUF",
@@ -48,7 +48,7 @@
       "vram_q4_mb": null,
       "ram_q4_gb": null,
       "downloads": 502883,
-      "likes": 484,
+      "likes": 485,
       "pipeline": "text-generation",
       "source": "huggingface",
       "has_gguf": true
@@ -3766,7 +3766,7 @@
       "vram_q4_mb": 5400,
       "ram_q4_gb": 8,
       "downloads": 1964599,
-      "likes": 843,
+      "likes": 844,
       "pipeline": "image-text-to-text",
       "source": "huggingface",
       "has_gguf": false
@@ -3883,7 +3883,7 @@
       "vram_q4_mb": 16200,
       "ram_q4_gb": 22,
       "downloads": 1368934,
-      "likes": 684,
+      "likes": 685,
       "pipeline": "image-text-to-text",
       "source": "huggingface",
       "has_gguf": false
