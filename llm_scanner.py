@@ -1194,6 +1194,7 @@ def generate_markdown_report(cpu, ram, gpus, tools, ollama_models, categories,
     now = datetime.now()
     ts = now.strftime("%d:%m:%Y_%H:%M")
     ts_display = now.strftime("%d-%m-%Y %H:%M")
+    hostname = platform.node() or "unknown"
 
     # Score all categories
     cat_results = []
@@ -1224,7 +1225,8 @@ def generate_markdown_report(cpu, ram, gpus, tools, ollama_models, categories,
     w(f"# 🖥️ {T('md_title')}")
     w(f"")
     w(f"> **{T('md_generated')}:** {ts_display}  ")
-    w(f"> **{T('md_machine')}:** {cpu['name']}  ")
+    w(f"> **{T('md_machine')}:** {hostname}  ")
+    w(f"> **CPU:** {cpu['name']}  ")
     w(f"> **OS:** {platform.system()} {platform.release()}")
     w(f"")
     w(f"---")
@@ -1498,7 +1500,7 @@ def generate_markdown_report(cpu, ram, gpus, tools, ollama_models, categories,
 
     # Write to file
     REPORTS_DIR.mkdir(exist_ok=True)
-    filename = f"llm_report_{ts}.md"
+    filename = f"llm_report_{hostname}_{ts}.md"
     filepath = REPORTS_DIR / filename
     with open(filepath, "w") as f:
         f.write("\n".join(lines))
