@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-LLM & AI Capability Scanner
-============================
+LLM & AI Fit Scanner
+====================
 Scans your system (CPU, RAM, GPU/VRAM) and scores each category and
 individual model to show what you can run locally.
 
@@ -262,8 +262,8 @@ _S = {
     "type_image":    ("🎨 Image Generation", "🎨 Image Generation",
                       "🎨 Bildgenerierung", "🎨 Génération d'images"),
     # ── Markdown
-    "md_title":      ("LLM & AI Capability Report", "LLM & AI Capability Report",
-                      "LLM & AI Fähigkeitsbericht", "Rapport de capacité LLM & IA"),
+    "md_title":      ("LLM & AI Fit Report", "LLM & AI Fit Report",
+                      "LLM & AI Fit Bericht", "Rapport LLM & AI Fit"),
     "md_generated":  ("Generated", "Gegenereerd", "Generiert", "Généré"),
     "md_machine":    ("Machine", "Machine", "Maschine", "Machine"),
     "md_hw":         ("Hardware", "Hardware", "Hardware", "Matériel"),
@@ -287,8 +287,8 @@ _S = {
     "md_size":       ("Size", "Grootte", "Größe", "Taille"),
     "md_scores_cat": ("Scores per Category", "Scores per Categorie",
                       "Scores pro Kategorie", "Scores par catégorie"),
-    "md_chart_t":    ("AI Capability Scores", "AI Capability Scores",
-                      "AI-Fähigkeits-Scores", "Scores de capacité IA"),
+    "md_chart_t":    ("AI Fit Scores", "AI Fit Scores",
+                      "AI Fit Scores", "Scores AI Fit"),
     "md_detail_cat": ("Detail per category", "Detail per categorie",
                       "Detail pro Kategorie", "Détail par catégorie"),
     "md_category":   ("Category", "Categorie", "Kategorie", "Catégorie"),
@@ -362,10 +362,10 @@ _S = {
                       "Catalogus: {n} modellen (geüpdatet: {ts})",
                       "Katalog: {n} Modelle (aktualisiert: {ts})",
                       "Catalogue : {n} modèles (mis à jour : {ts})"),
-    "md_report_gen": ("Report generated: {ts} by LLM Scanner v1.2",
-                      "Rapport gegenereerd: {ts} door LLM Scanner v1.2",
-                      "Bericht erstellt: {ts} von LLM Scanner v1.2",
-                      "Rapport généré : {ts} par LLM Scanner v1.2"),
+    "md_report_gen": ("Report generated: {ts} by LLM & AI Fit Scanner v1.2",
+                      "Rapport gegenereerd: {ts} door LLM & AI Fit Scanner v1.2",
+                      "Bericht erstellt: {ts} von LLM & AI Fit Scanner v1.2",
+                      "Rapport généré : {ts} par LLM & AI Fit Scanner v1.2"),
     # ── Report file messages
     "report_saved":  ("📄 Report saved: {path}", "📄 Rapport opgeslagen: {path}",
                       "📄 Bericht gespeichert: {path}", "📄 Rapport enregistré : {path}"),
@@ -522,7 +522,7 @@ def get_ollama_local_models():
 
 def _http_get_json(url, timeout=15):
     """Simpele JSON GET zonder externe dependencies."""
-    req = Request(url, headers={"User-Agent": "llm-scanner/1.0"})
+    req = Request(url, headers={"User-Agent": "llm-ai-fit-scanner/1.0"})
     with urlopen(req, timeout=timeout) as resp:
         return json.loads(resp.read().decode())
 
@@ -1626,7 +1626,7 @@ def print_summary(results, ram, total_vram, tools, catalog):
 
 def main():
     parser = argparse.ArgumentParser(
-        description="LLM & AI Capability Scanner",
+        description="LLM & AI Fit Scanner",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -1720,7 +1720,7 @@ Examples:
 
     # ── Terminal output
     print(f"\n{BOLD}{'═' * 70}{RESET}")
-    print(f"{BOLD}{CYAN}  🖥️  LLM & AI Capability Scanner{RESET}")
+    print(f"{BOLD}{CYAN}  🖥️  LLM & AI Fit Scanner{RESET}")
     print(f"{BOLD}{'═' * 70}{RESET}\n")
 
     print_hardware(cpu, ram, gpus, tools)

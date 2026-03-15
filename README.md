@@ -1,8 +1,8 @@
-# LMfit — LLM & AI Capability Scanner
+# LLM & AI Fit Scanner
 
 **Scan your hardware and find out which AI models you can run locally.**
 
-LMfit auto-detects your CPU, RAM, GPU and VRAM, then scores 12 AI model
+LLM & AI Fit Scanner auto-detects your CPU, RAM, GPU and VRAM, then scores 12 AI model
 categories and hundreds of individual models to tell you exactly what fits
 on your machine — and how to run it.
 
@@ -27,8 +27,8 @@ on your machine — and how to run it.
 ## Installation
 
 ```bash
-git clone https://github.com/CervezaStallone/lmfit.git
-cd lmfit
+git clone https://github.com/CervezaStallone/llm-ai-fit-scanner.git
+cd llm-ai-fit-scanner
 python3 -m venv .venv
 source .venv/bin/activate
 pip install psutil
@@ -72,7 +72,7 @@ python llm_scanner.py --update --lang fr
 
 ```
 ══════════════════════════════════════════════════════════════════════
-  🖥️  LLM & AI Capability Scanner
+  🖥️  LLM & AI Fit Scanner
 ══════════════════════════════════════════════════════════════════════
 
   HARDWARE (auto-detected)
@@ -132,7 +132,7 @@ Scoring considers:
 
 ## Model Catalog
 
-LMfit ships with a built-in catalog of common models. Run `--update` to
+LLM & AI Fit Scanner ships with a built-in catalog of common models. Run `--update` to
 fetch the latest from:
 - **HuggingFace** — GGUF models from the Hub
 - **Ollama** — models from the Ollama library
