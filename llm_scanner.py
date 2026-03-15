@@ -246,6 +246,36 @@ _S = {
                       "Code generatie, debugging, uitleg",
                       "Code-Generierung, Debugging, Erklärung",
                       "Génération de code, débogage, explication"),
+    "cat_video":     ("Video Generation", "Videogeneratie",
+                      "Videogenerierung", "Génération vidéo"),
+    "cat_video_d":   ("Generate video clips from text or images",
+                      "Genereer videoclips uit tekst of afbeeldingen",
+                      "Videoclips aus Text oder Bildern generieren",
+                      "Générer des clips vidéo à partir de texte ou d'images"),
+    "cat_objdet":    ("Object Detection", "Objectdetectie",
+                      "Objekterkennung", "Détection d'objets"),
+    "cat_objdet_d":  ("Detect and classify objects in images",
+                      "Objecten in afbeeldingen detecteren en classificeren",
+                      "Objekte in Bildern erkennen und klassifizieren",
+                      "Détecter et classifier des objets dans les images"),
+    "cat_segment":   ("Image Segmentation", "Beeldsegmentatie",
+                      "Bildsegmentierung", "Segmentation d'images"),
+    "cat_segment_d": ("Segment objects, pixel-level scene understanding",
+                      "Segmenteer objecten, pixelniveau scèneanalyse",
+                      "Objekte segmentieren, pixelgenaue Szenenanalyse",
+                      "Segmenter des objets, compréhension pixel par pixel"),
+    "cat_audiogen":  ("Audio / Music Generation", "Audio- / Muziekgeneratie",
+                      "Audio- / Musikgenerierung", "Génération audio / musique"),
+    "cat_audiogen_d":("Generate music, sound effects, audio from text",
+                      "Genereer muziek, geluidseffecten, audio uit tekst",
+                      "Musik, Soundeffekte, Audio aus Text generieren",
+                      "Générer musique, effets sonores, audio à partir de texte"),
+    "cat_docai":     ("Document AI / OCR", "Document AI / OCR",
+                      "Dokument-AI / OCR", "Document AI / OCR"),
+    "cat_docai_d":   ("Extract text from documents, receipts, scanned pages",
+                      "Tekst extraheren uit documenten, bonnen, scans",
+                      "Text aus Dokumenten, Quittungen, Scans extrahieren",
+                      "Extraire du texte de documents, reçus, pages scannées"),
     # ── Type labels
     "type_llm":      ("💬 Language Models (LLM)", "💬 Taal-modellen (LLM)",
                       "💬 Sprachmodelle (LLM)", "💬 Modèles de langage (LLM)"),
@@ -261,6 +291,16 @@ _S = {
                       "🔊 Text-zu-Sprache", "🔊 Synthèse vocale"),
     "type_image":    ("🎨 Image Generation", "🎨 Image Generation",
                       "🎨 Bildgenerierung", "🎨 Génération d'images"),
+    "type_video":    ("🎬 Video Generation", "🎬 Videogeneratie",
+                      "🎬 Videogenerierung", "🎬 Génération vidéo"),
+    "type_objdet":   ("🔍 Object Detection", "🔍 Objectdetectie",
+                      "🔍 Objekterkennung", "🔍 Détection d'objets"),
+    "type_segment":  ("✂️ Segmentation", "✂️ Segmentatie",
+                      "✂️ Segmentierung", "✂️ Segmentation"),
+    "type_audiogen": ("🎵 Audio / Music Gen", "🎵 Audio- / Muziekgen.",
+                      "🎵 Audio- / Musikgen.", "🎵 Gén. audio / musique"),
+    "type_docai":    ("📄 Document AI / OCR", "📄 Document AI / OCR",
+                      "📄 Dokument-AI / OCR", "📄 Document AI / OCR"),
     # ── Markdown
     "md_title":      ("LLM & AI Fit Report", "LLM & AI Fit Report",
                       "LLM & AI Fit Bericht", "Rapport LLM & AI Fit"),
@@ -471,7 +511,7 @@ def get_installed_tools():
         "onnxruntime": "ONNX Runtime",
         "ctransformers": "CTransformers (GGUF in Python)",
         "llama_cpp": "llama-cpp-python bindings",
-        "diffusers": "HuggingFace Diffusers (image gen)",
+        "diffusers": "HuggingFace Diffusers (image/video gen)",
         "whisper": "OpenAI Whisper",
         "faster_whisper": "Faster Whisper",
         "TTS": "Coqui TTS (text-to-speech)",
@@ -482,6 +522,11 @@ def get_installed_tools():
         "auto_gptq": "AutoGPTQ (optimized quantization)",
         "exllama": "ExLlama (fast GPTQ inference)",
         "bitsandbytes": "BitsAndBytes (4/8-bit quantization)",
+        "ultralytics": "Ultralytics (YOLO object detection)",
+        "segment_anything": "SAM (Segment Anything)",
+        "audiocraft": "AudioCraft (music/audio generation)",
+        "pytesseract": "Tesseract OCR (document AI)",
+        "easyocr": "EasyOCR (document AI)",
     }
     for mod, desc in py_tools.items():
         try:
@@ -555,10 +600,30 @@ def _classify_model_type(model_id, tags, pipeline_tag=""):
     # TTS
     if pipe in ("text-to-speech",) or any(t in model_lower for t in ("tts", "bark", "piper")):
         return "tts"
+    # Video gen
+    if pipe in ("text-to-video",) or any(t in model_lower for t in (
+            "cogvideo", "animatediff", "mochi", "stable-video", "videocrafter")):
+        return "video-gen"
     # Image gen
     if pipe in ("text-to-image",) or any(t in model_lower for t in (
             "stable-diffusion", "sdxl", "flux", "diffusion")):
         return "image-gen"
+    # Object detection
+    if pipe in ("object-detection",) or any(t in model_lower for t in (
+            "yolo", "detr", "grounding-dino", "owlvit")):
+        return "object-detection"
+    # Image segmentation
+    if pipe in ("image-segmentation",) or any(t in model_lower for t in (
+            "sam", "segment-anything", "mask2former", "oneformer")):
+        return "segmentation"
+    # Audio / music gen
+    if pipe in ("text-to-audio",) or any(t in model_lower for t in (
+            "musicgen", "audiocraft", "riffusion", "stable-audio")):
+        return "audio-gen"
+    # Document AI / OCR
+    if pipe in ("document-question-answering", "image-to-text") or any(t in model_lower for t in (
+            "trocr", "donut", "layoutlm", "florence", "got-ocr", "nougat")):
+        return "document-ai"
     # Vision / multimodal
     if pipe in ("image-text-to-text", "visual-question-answering") or any(
             t in model_lower for t in ("llava", "vision", "vl-", "-vl", "multimodal", "minicpm-v")):
@@ -617,6 +682,12 @@ def fetch_huggingface_models(limit=100):
         ("", "text-to-speech"),
         ("", "feature-extraction"),
         ("", "image-text-to-text"),
+        ("", "text-to-video"),
+        ("", "object-detection"),
+        ("", "image-segmentation"),
+        ("", "text-to-audio"),
+        ("", "document-question-answering"),
+        ("", "image-to-text"),
     ]
     seen = set()
     for tag_filter, pipeline in searches:
@@ -676,6 +747,8 @@ def fetch_ollama_library():
         "stable-diffusion",
         "command-r",
         "yi",
+        "moondream", "bakllava",
+        "minicpm-v",
     ]
     models = []
     for name in known_models:
@@ -943,6 +1016,71 @@ def get_categories():
             "match_types": ["code-llm"],
             "match_bucket": None,
         },
+        {
+            "categorie": T("cat_video"),
+            "beschrijving": T("cat_video_d"),
+            "vram_min_mb": 12000,
+            "ram_min_gb": 16,
+            "ram_cpu_only_gb": 32,
+            "voorbeelden": [
+                "CogVideoX-2B", "AnimateDiff", "Mochi-1",
+                "Stable Video Diffusion",
+            ],
+            "match_types": ["video-gen"],
+            "match_bucket": None,
+        },
+        {
+            "categorie": T("cat_objdet"),
+            "beschrijving": T("cat_objdet_d"),
+            "vram_min_mb": 1000,
+            "ram_min_gb": 2,
+            "ram_cpu_only_gb": 4,
+            "voorbeelden": [
+                "YOLOv8", "YOLO11", "DETR", "RT-DETR",
+                "Grounding DINO",
+            ],
+            "match_types": ["object-detection"],
+            "match_bucket": None,
+        },
+        {
+            "categorie": T("cat_segment"),
+            "beschrijving": T("cat_segment_d"),
+            "vram_min_mb": 2000,
+            "ram_min_gb": 4,
+            "ram_cpu_only_gb": 8,
+            "voorbeelden": [
+                "SAM (Segment Anything)", "SAM 2", "Mask2Former",
+                "OneFormer",
+            ],
+            "match_types": ["segmentation"],
+            "match_bucket": None,
+        },
+        {
+            "categorie": T("cat_audiogen"),
+            "beschrijving": T("cat_audiogen_d"),
+            "vram_min_mb": 4000,
+            "ram_min_gb": 8,
+            "ram_cpu_only_gb": 16,
+            "voorbeelden": [
+                "MusicGen", "AudioCraft", "Riffusion",
+                "Stable Audio Open",
+            ],
+            "match_types": ["audio-gen"],
+            "match_bucket": None,
+        },
+        {
+            "categorie": T("cat_docai"),
+            "beschrijving": T("cat_docai_d"),
+            "vram_min_mb": 1000,
+            "ram_min_gb": 2,
+            "ram_cpu_only_gb": 4,
+            "voorbeelden": [
+                "TrOCR", "Donut", "LayoutLMv3", "Florence-2",
+                "GOT-OCR2",
+            ],
+            "match_types": ["document-ai"],
+            "match_bucket": None,
+        },
     ]
 
 
@@ -1140,6 +1278,11 @@ def print_individual_models(catalog, total_vram, ram, cpu_threads):
         "stt": T("type_stt"),
         "tts": T("type_tts"),
         "image-gen": T("type_image"),
+        "video-gen": T("type_video"),
+        "object-detection": T("type_objdet"),
+        "segmentation": T("type_segment"),
+        "audio-gen": T("type_audiogen"),
+        "document-ai": T("type_docai"),
     }
 
     by_type = {}
@@ -1368,6 +1511,11 @@ def generate_markdown_report(cpu, ram, gpus, tools, ollama_models, categories,
             "stt": T("type_stt"),
             "tts": T("type_tts"),
             "image-gen": T("type_image"),
+            "video-gen": T("type_video"),
+            "object-detection": T("type_objdet"),
+            "segmentation": T("type_segment"),
+            "audio-gen": T("type_audiogen"),
+            "document-ai": T("type_docai"),
         }
 
         for mtype, label in type_labels.items():
@@ -1528,11 +1676,21 @@ def _mermaid_cat_labels(cat_results):
                 name = "STT"
             elif "tts" in lower or "text-to-s" in lower or "tekst-naar" in lower or "text-zu" in lower:
                 name = "TTS"
+            elif "video" in lower:
+                name = "VideoGen"
             elif "image" in lower or "bild" in lower:
                 if "klein" in lower or "small" in lower or "petit" in lower:
                     name = "ImgGen-S"
                 else:
                     name = "ImgGen-L"
+            elif "object" in lower or "objekt" in lower or "objet" in lower or "detect" in lower:
+                name = "ObjDet"
+            elif "segment" in lower:
+                name = "Segment"
+            elif "audio" in lower or "music" in lower or "muziek" in lower or "musik" in lower or "musique" in lower:
+                name = "AudioGen"
+            elif "document" in lower or "ocr" in lower or "dokument" in lower:
+                name = "DocAI"
             elif "vision" in lower or "multimod" in lower:
                 name = "Vision"
             elif "code" in lower:
@@ -1656,6 +1814,7 @@ Examples:
     # ── Update catalog if requested
     if args.update:
         update_catalog()
+        return
 
     # ── Hardware detection (always automatic)
     cpu = get_cpu_info()
