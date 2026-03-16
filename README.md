@@ -33,7 +33,7 @@ git clone https://github.com/CervezaStallone/llm-ai-fit-scanner.git
 cd llm-ai-fit-scanner
 python3 -m venv .venv
 source .venv/bin/activate
-pip install psutil
+pip install -r requirements.txt
 ```
 
 > `psutil` is the only required dependency.
